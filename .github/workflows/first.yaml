@@ -1,6 +1,32 @@
 name: First Workflow
 
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+      # Wrap the pattern in quotes
+      # - 'feature/*' # matches feature/a, feature/b, but not feature/feat/a
+      - 'feature/**' # matches everything above
+      - 'feature/featC' # ignore a specific branch, place it after matching patterns
+    tags:
+      - v1.*
+    paths:
+     - '**.js' # run only for change in JS files
+     - '!filename.js'
+    # paths-ignore: # ont of paths or paths-ignore
+    #   - "docs/**"
+
+    # branches-ignore:
+    #   - develop
+
+  # pull_request:
+  #   types: [opened, reopened, closed, assigned]
+  
+  # schedule:
+  #   - cron: "0/5 * * * *"
+
+  # repository_dispatch:
+  #   types: [build]
 
 jobs:
   run-shell-command:
