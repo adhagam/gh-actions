@@ -1,3 +1,4 @@
+# GITHUB)_SECTERTS hold upto 64kb
 name: ENV variables
 on: 
   push:
@@ -15,7 +16,12 @@ jobs:
     - name: Push a random file
       run: |
         pwd
-        ls -a        
+        ls -a
+        # Clone the repo instead of uisng actions/checkout
+        git init
+        # git remote add origin "git@github.com:adhagam/gh-actions.git"
+        git remote add origin "https://:GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
+
     - name: Create issue using REST API
       run: |
         curl --request POST \
