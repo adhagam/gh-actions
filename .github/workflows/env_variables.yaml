@@ -1,7 +1,8 @@
 # GITHUB)_SECTERTS hold upto 64kb
 name: ENV variables
 on: 
-  push:
+  # push:
+  workflow_dispatch:    
 
 env:
   # WF_ENV: ${{ secrets.GITHUB_TOKEN }}

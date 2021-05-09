@@ -1,0 +1,34 @@
+name: Matrix Configuration
+on:
+  workflow_dispatch:
+    
+
+jobs:
+  run-shell-command:    
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        node_version: [10, 14]
+        include:
+          - os: "ubuntu_latest"
+            node_version: 8
+            is_ubuntu_8: true # custom value when os is ubuntu_latest and node_version is 8
+        exclude:
+          - os: ubuntu-latest
+            node_version: 10 #Job run sonly 5 times          
+      max-parallel: 3 # runs in parallel
+      # If failfast is set to true, even if one job fails, all otehr jobs fail
+      fail-fast: true 
+    # runs-on: ${{ matrix.latest }}
+    runs-on: ubuntu-latest
+    steps:      
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: node version
+        run: |
+          node -v
+          npm -v
+          echo uname -v 
+      

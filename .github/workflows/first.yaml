@@ -1,19 +1,19 @@
 name: First Workflow
 
-on: 
+on:
   push:
     branches:
       - main
       # Wrap the pattern in quotes
       # - 'feature/*' # matches feature/a, feature/b, but not feature/feat/a
-      - 'feature/**' # matches everything above
-      - 'feature/featC' # ignore a specific branch, place it after matching patterns
+      - "feature/**" # matches everything above
+      - "feature/featC" # ignore a specific branch, place it after matching patterns
     tags:
       - v1.*
     paths:
-     - '**.js' # run only for change in JS files
-     - '!filename.js'
-    # paths-ignore: # ont of paths or paths-ignore
+      - "**.js" # run only for change in JS files
+      - "!filename.js"
+    # paths-ignore: # use one of: paths or paths-ignore
     #   - "docs/**"
 
     # branches-ignore:
@@ -21,7 +21,7 @@ on:
 
   # pull_request:
   #   types: [opened, reopened, closed, assigned]
-  
+
   # schedule:
   #   - cron: "0/5 * * * *"
 
@@ -29,12 +29,21 @@ on:
   #   types: [build]
 
 jobs:
-  run-shell-command:
+  run-shell-command:    
+    strategy:
+      matrix:
+        os: ["ubuntu-latest", "windows-latest"]
+        node_version: [10, 14]
+      # max-parallel: 3 # runs in parallel
+      # If fail fast is set to true, even if one job fails, all other jobs fail. Default is true
+      # fail-fast: true 
+    # runs-on: ${{ matrix.latest }}
     runs-on: ubuntu-latest
-
     steps:
       - name: echo shell command
         run: echo 'First Work flow'
+        continue-on-error: true # Will run the following steps in case of error
+        timeout-minutes: 10 # Will kill the process if it take linger than 10 mins
       - name: RUn multi line command
         run: |
           node -v
@@ -44,14 +53,20 @@ jobs:
         run: |
           import platform
           print(platform.processor())
-  
+
   run-windows-command:
     runs-on: windows-latest
     # Default shell for windows is Power Shell
     steps:
       - name: Directory powershell
         run: Get-Location
-      - name: Directory 
+      - name: Directory
         run: pwd
         shell: bash
 
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: ["run-shell-command"]
+    steps:
+      - name: cleanup
+        run: rm -rf ${{ github.workspace }}
