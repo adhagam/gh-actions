@@ -1,0 +1,30 @@
+name: Create Event Workflow
+env:
+  application: ${{ github.event.repository.name }}
+on:
+  create:
+  workflow_dispatch:
+
+jobs:
+  test:
+    # if: ${{ contains(github.event.repository.name, 'release') || contains(github.event.repository.name, 'hotfix') }}
+    name: Create Event test
+    runs-on: ubuntu-latest
+
+    steps:
+      # - uses: actions/checkout@v2
+
+      - name: echo shell command
+        run: |
+          echo ${{ github.event.repository.name }}
+          echo ${{ github.ref }}
+
+  #  Cleanup job after the release. Make sure the `needs` value matches the earlier release job
+  cleaner:
+    name: Cleanup workspace
+    runs-on: ubuntu-latest
+    needs: test
+    if: ${{ always() }}
+    steps:
+      - name: Clean runner workspace path
+        run: rm -rf "${{ github.workspace }}"
