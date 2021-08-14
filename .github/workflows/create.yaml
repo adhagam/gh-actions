@@ -3,11 +3,12 @@ env:
   application: ${{ github.event.repository.name }}
 on:
   create:
+  push:
   workflow_dispatch:
 
 jobs:
   test:
-    if: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
+    if: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') || contains(github.ref, 'main') }}
     name: Create Event test
     runs-on: ubuntu-latest
 
@@ -19,6 +20,7 @@ jobs:
           echo ${{ github.event.repository.name }}
           echo ${{ github.ref }}
           echo ${{ contains(github.ref, 'release') }}
+          echo ${{ github.event_name }}
 
   #  Cleanup job after the release. Make sure the `needs` value matches the earlier release job
   cleaner:
