@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    # if: ${{ contains(github.event.repository.name, 'release') || contains(github.event.repository.name, 'hotfix') }}
+    if: ${{ contains(github.ref, 'release') || contains(github.ref, 'hotfix') }}
     name: Create Event test
     runs-on: ubuntu-latest
 
@@ -18,6 +18,7 @@ jobs:
         run: |
           echo ${{ github.event.repository.name }}
           echo ${{ github.ref }}
+          echo ${{ contains(github.ref, 'release') }}
 
   #  Cleanup job after the release. Make sure the `needs` value matches the earlier release job
   cleaner:
